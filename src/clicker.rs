@@ -1,4 +1,4 @@
-use std::{sync::{atomic::Ordering, Arc, Mutex}, thread};
+use std::sync::{Arc, Mutex};
 
 use rand::thread_rng;
 use spin_sleep::sleep;
@@ -31,7 +31,11 @@ impl Clicker {
 
     pub fn run(&mut self) {
         loop {
-            if self.hot_key.lock().unwrap().check() {
+            if self.hot_key
+                .lock()
+                .unwrap()
+                .check()
+            {
                 self.click()
             }
         }
@@ -58,7 +62,11 @@ impl Clicker {
         if diff >= 0 {
             match self.delay_mode {
                 DelayMode::Gen => {
-                    self.data.generate(clicks, self.data.cps().distribution(), &mut thread_rng());
+                    self.data.generate(clicks, 
+                        self.data
+                            .cps()
+                            .distribution(),
+                        &mut thread_rng());
                 }
                 
                 DelayMode::Reuse => {

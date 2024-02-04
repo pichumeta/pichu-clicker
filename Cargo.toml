@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+plotters = { version = "0.3.5", features = ["bitmap_backend"] }
 rand = "0.8.5"
 spin_sleep = "1.2.0"
 winapi = { version = "0.3.9", features = ["winuser", "processthreadsapi"] }

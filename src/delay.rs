@@ -11,20 +11,20 @@ impl Delay {
         Self { down, up }
     }
     
-    pub fn from_durations(delays: (Duration, Duration)) -> Self {
-        Self { down: delays.0, up: delays.1 }
+    pub fn from_durations(down: Duration, up: Duration) -> Self {
+        Self { down, up }
     }
 
     pub fn from_millis(down: u64, up: u64) -> Self {
-        Self { up: Duration::from_millis(up), down: Duration::from_millis(down) }
+        Self { down: Duration::from_millis(down), up: Duration::from_millis(up) }
     }
 
-    pub fn durations(&self) -> (Duration, Duration) {
-        (self.down, self.up)
+    pub fn from_nanos(down: u64, up: u64) -> Self {
+        Self { down: Duration::from_nanos(down), up: Duration::from_nanos(up) }
     }
 
     pub fn total_millis(&self) -> u128 {
-        self.up.as_millis() + self.down.as_millis()
+        (self.down + self.up).as_millis()
     }
 }
 
@@ -32,8 +32,7 @@ impl Add<Delay> for Delay {
     type Output = Delay;
 
     fn add(self, rhs: Delay) -> Delay {
-        Delay::from_millis((self.down.as_millis() + rhs.down.as_millis()) as u64, 
-            (self.up.as_millis() + rhs.up.as_millis()) as u64)
+        Delay::from_durations(self.down + rhs.down, self.up + rhs.up)
     }
 }
 

@@ -20,16 +20,17 @@ impl CPS {
     }
 
     pub fn delay(&self) -> Delay {
-        self.cps_to_delay()
+        Self::cps_to_delay(*self)
     }
 
     pub fn distribution(&self) -> Uniform<u64> {
-        let delay = self.cps_to_delay();
-        Uniform::new_inclusive(0, delay.down.as_millis() as u64)
+        let delay = self.delay();
+        dbg!(delay);
+        Uniform::new_inclusive(0, (delay.down + delay.up).as_millis() as u64)
     }
 
-    fn cps_to_delay(&self) -> Delay {
-        let each_delay = (SECOND / self.cps / 2.0) as u64;
+    fn cps_to_delay(cps: CPS) -> Delay {
+        let each_delay = (SECOND / cps.cps / 2.0) as u64;
         Delay::from_millis(each_delay, each_delay)
     }
 
