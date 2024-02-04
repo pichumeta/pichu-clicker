@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use rand::thread_rng;
 use winapi::um::winuser::{VK_DELETE, VK_LBUTTON};
 
@@ -11,14 +13,18 @@ fn main() {
     let left_mouse = Button::new(VK_LBUTTON);
     let window = mc_window();
 
-    // let mut recorder = ClickRecorder::new(left_mouse);
-    // recorder.record(1000);
+    let mut recorder = ClickRecorder::new(left_mouse);
+    recorder.record(500);
 
     let file_path = "test.clicks";
 
-    // recorder.data.write_to_file(file_path).unwrap();
+    recorder.data.write_to_file(file_path).unwrap();
     let mut clicks = ClickData::from_file(file_path).unwrap();
-    clicks.filter_by_freq(7).unwrap();
+    //clicks.filter_by_freq(1).unwrap();
+    clicks.filter_by_duration(Duration::from_millis(400));
+
+    let dimensions = (600, 600);
+    clicks.plot_histogram("test.png", dimensions).unwrap();
 
     // dbg!(recorder.data.cps());
     /*dbg!(clicks.cps());
@@ -36,8 +42,8 @@ fn main() {
     dbg!(generated.cps());
 
     generated.plot_histogram("test_generated.png", dimensions).unwrap();*/
-
+    println!("ready");
     let mut clicker = Clicker::new(left_mouse, clicks, DelayMode::Reuse, 
-         HotKey::new(left_mouse, Button::new(VK_DELETE)), window);
+        HotKey::new(left_mouse, Button::new(VK_DELETE)), window);
     clicker.run()
 }

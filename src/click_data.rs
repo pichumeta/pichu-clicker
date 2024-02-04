@@ -122,7 +122,7 @@ impl ClickData {
     }
 
     pub fn total_durations(&self) -> Vec<Duration> {
-        self.delays.iter().map(|delay| delay.down + delay.up).collect()
+        self.delays.iter().map(|delay| delay.duration()).collect()
     }
 
     pub fn total_durations_as_millis(&self) -> Vec<u128> {
@@ -158,6 +158,22 @@ impl ClickData {
         self.delays = new_delays;
 
         Ok(())
+    }
+
+    pub fn filter_by_delay(&mut self, delay: Delay) {
+
+    }
+
+    pub fn filter_by_duration(&mut self, max_duration: Duration) {
+        let mut new_delays = vec![];
+
+        for delay in &self.delays {
+            if delay.duration() <= max_duration {
+                new_delays.push(*delay)
+            }
+        }
+
+        self.delays = new_delays;
     }
 
     pub fn plot_histogram(&self, file_path: &str, dimensions: (u32, u32)) -> Result<(), Box<dyn Error>> {

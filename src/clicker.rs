@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::{sync::{Arc, Mutex}, time::Duration};
 
 use rand::thread_rng;
 use spin_sleep::sleep;
@@ -36,8 +36,11 @@ impl Clicker {
                 .unwrap()
                 .check()
             {
-                self.click()
+                self.click();
+                continue;
             }
+
+            sleep(Duration::from_millis(100));
         }
     }
 

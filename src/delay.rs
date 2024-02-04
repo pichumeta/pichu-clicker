@@ -23,8 +23,12 @@ impl Delay {
         Self { down: Duration::from_nanos(down), up: Duration::from_nanos(up) }
     }
 
+    pub fn duration(&self) -> Duration {
+        self.down + self.up
+    }
+
     pub fn total_millis(&self) -> u128 {
-        (self.down + self.up).as_millis()
+        self.duration().as_millis()
     }
 }
 

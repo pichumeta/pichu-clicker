@@ -20,12 +20,16 @@ pub struct HotKey {
 
 impl HotKey {
     pub fn new(hold_key: Button, hot_key: Button) -> Self {
-        Self { hold_key, hot_key, enabled: false, run: true, wait: Duration::from_millis(10) }
+        Self { hold_key, hot_key, enabled: false, run: true, wait: Duration::from_millis(30) }
     }
 
     pub fn check(&mut self) -> bool {
-        self.enabled = self.hold_key() || self.hot_key();
-        self.enabled
+        let hold_key = self.hold_key();
+        let hot_key = self.hot_key();
+
+        self.enabled = hot_key;
+
+        self.enabled || hold_key
     }
 
     pub fn run(&mut self) {
@@ -36,15 +40,12 @@ impl HotKey {
     }
 
     fn hold_key(&self) -> bool {
-        unsafe {
-            GetAsyncKeyState(self.hold_key.button) != 0
-        }
+        let down = self.hold_key.is_down();
+        down
     }
 
     fn hot_key(&self) -> bool {
-        if unsafe {
-            GetAsyncKeyState(self.hot_key.button)
-        } != 0 {
+        if self.hot_key.is_down() {
             return !self.enabled;
         }
 
