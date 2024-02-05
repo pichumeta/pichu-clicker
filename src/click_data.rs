@@ -1,4 +1,4 @@
-use std::{collections::HashMap, error::Error, fs::{read_to_string, write}, io, time::Duration};
+use std::{collections::HashMap, error::Error, fs::{read_to_string, write, OpenOptions}, io::{self, Write}, time::Duration};
 
 use plotters::prelude::*;
 
@@ -113,6 +113,14 @@ impl ClickData {
         write(file_path, self.string())
     }
 
+    pub fn append_to_file(&self, file_path: &str) -> Result<(), io::Error> {
+        let mut data_file = OpenOptions::new()
+            .append(true)
+            .open(file_path)?;
+
+        data_file.write_all(self.string().as_bytes())
+    }
+
     pub fn down_durations(&self) -> Vec<Duration> {
         self.delays.iter().map(|delay| delay.down).collect()
     }
@@ -160,8 +168,8 @@ impl ClickData {
         Ok(())
     }
 
-    pub fn filter_by_delay(&mut self, delay: Delay) {
-
+    pub fn filter_by_delay(&mut self, max_delay: Delay) {
+        self.filter_by_duration(max_delay.duration())
     }
 
     pub fn filter_by_duration(&mut self, max_duration: Duration) {
