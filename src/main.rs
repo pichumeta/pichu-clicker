@@ -13,18 +13,21 @@ fn main() {
     let left_mouse = Button::new(VK_LBUTTON);
     let window = mc_window();
 
-    let mut recorder = ClickRecorder::new(left_mouse);
-    recorder.record(500);
+    //let mut recorder = ClickRecorder::new(left_mouse);
+    //recorder.record(4000);
 
     let file_path = "test.clicks";
 
-    recorder.data.write_to_file(file_path).unwrap();
+    //recorder.data.append_to_file(file_path).unwrap();
     let mut clicks = ClickData::from_file(file_path).unwrap();
     //clicks.filter_by_freq(1).unwrap();
-    clicks.filter_by_duration(Duration::from_millis(400));
+    clicks.filter_by_duration(Duration::from_millis(105));
 
-    let dimensions = (600, 600);
+    let dimensions = (900, 450);
     clicks.plot_histogram("test.png", dimensions).unwrap();
+    //clicks.write_to_file(file_path).unwrap();
+    dbg!(&clicks.cps());
+    println!("num: {}", clicks.num());
 
     // dbg!(recorder.data.cps());
     /*dbg!(clicks.cps());
